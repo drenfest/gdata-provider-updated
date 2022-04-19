@@ -1,0 +1,68 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# Portions Copyright (C) Philipp Kewisch
+---
+name: "Legacy Checkin"
+on:
+  push:
+    branches:
+      - legacy
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "npm ci"
+        run: npm ci
+
+      - if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/') == false)
+        name: "Commit lint"
+        uses: wagoid/commitlint-github-action@v4
+
+      - name: "ESLint"
+        uses: kewisch/action-yet-another-eslint@v1
+        with:
+          extensions: "js,jsm"
+
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Build"
+        run: npm run build
+
+      - name: "Upload"
+        uses: actions/upload-artifact@v2
+        with:
+          name: gdata-provider.xpi
+          path: dist/gdata-provider.xpi
+
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Run Tests"
+        run: npm run test
+
+      - name: "Coveralls"
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

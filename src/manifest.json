@@ -1,0 +1,151 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "91.1.0pre",
+  "author": "Philipp Kewisch",
+  "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/",
+  "default_locale": "en",
+  "applications": {
+    "gecko": {
+      "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      "strict_min_version": "91.0"
+    }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      "strict_min_version": "78.2.0"
+    }
+  },
+  "icons": {
+    "256": "icon.png"
+  },
+
+  "calendar_provider": {
+    "name": "__MSG_extensionName__",
+    "creation_panel": "/content/calendar-creation.html",
+    "capabilities": {
+      "timezones": {
+        "floating": false,
+        "UTC": true
+      },
+      "attachments": false,
+      "priority": false,
+      "privacy": ["default", "public", "private"],
+      "categories": {
+        "count": 3
+      },
+      "alarms": {
+        "count": 5,
+        "actions": ["display", "email"]
+      },
+      "tasks": true,
+      "events": true,
+      "removeModes": ["unsubscribe"],
+      "requiresNetwork": true
+    }
+  },
+
+  "calendar_item_action": {
+    "default_icon": "icon.png",
+    "default_popup": "content/calendar-item-action.html",
+    "default_title": "__MSG_extensionName__"
+  },
+
+  "calendar_item_details": {
+    "default_icon": "icon.png",
+    "default_content": "content/calendar-item-details.html",
+    "default_title": "__MSG_extensionName__",
+    "browser_style": true
+  },
+
+  "browser_action": {
+    "default_popup": "/content/migration-wizard.html"
+  },
+
+  "background": {
+    "page": "background/index.html"
+  },
+
+  "permissions": [
+    "storage",
+    "identity",
+    "notifications",
+    "idle",
+    "webRequest",
+
+    "https://www.googleapis.com/calendar/v3/*",
+    "https://www.googleapis.com/tasks/v1/*",
+    "https://accounts.google.com/o/oauth2/approval/v2*"
+  ],
+
+  "experiment_apis": {
+    "gdata": {
+      "schema": "experiments/gdata/gdata.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/gdata/ext-gdata.js",
+        "events": ["startup"],
+        "paths": [
+          ["gdata"]
+        ]
+      }
+    },
+    "calendar_items": {
+      "schema": "experiments/calendar/schema/calendar-items.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-items.js",
+        "paths": [
+          ["calendar", "items"]
+        ]
+      }
+    },
+    "calendar_calendars": {
+      "schema": "experiments/calendar/schema/calendar-calendars.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-calendars.js",
+        "paths": [
+          ["calendar", "calendars"]
+        ]
+      }
+    },
+    "calendar_provider": {
+      "schema": "experiments/calendar/schema/calendar-provider.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-provider.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendar", "provider"]
+        ]
+      }
+    },
+    "calendarItemAction": {
+      "schema": "experiments/calendar/schema/calendarItemAction.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendarItemAction.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendarItemAction"]
+        ]
+      }
+    },
+    "calendarItemDetails": {
+      "schema": "experiments/calendar/schema/calendarItemDetails.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendarItemDetails.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendarItemDetails"]
+        ]
+      }
+
+    }
+  }
+}
